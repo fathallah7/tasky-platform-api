@@ -1,5 +1,6 @@
 package com.crud.demo.controller;
 
+import com.crud.demo.dto.ApiResponse;
 import com.crud.demo.models.Todo;
 import com.crud.demo.models.User;
 import com.crud.demo.repository.TodoRepository;
@@ -24,20 +25,22 @@ public class TodoController {
     }
 
     @GetMapping
-    public List<Todo> getUserTodos(Principal principal) {
+    public ApiResponse<List<Todo>> getUserTodos(Principal principal) {
         User user = userRepository.findByEmail(principal.getName()).orElseThrow();
-        return todoRepository.findByUser(user);
+        List<Todo> todos = todoRepository.findByUser(user);
+        return ApiResponse.success("Fetched todos successfully",todos);
     }
 
     @PostMapping
-    public Todo createTodo(@RequestBody @Valid Todo todo, Principal principal) {
+    public ApiResponse<Todo> createTodo(@RequestBody @Valid Todo todo, Principal principal) {
         User user = userRepository.findByEmail(principal.getName()).orElseThrow();
         todo.setUser(user);
-        return todoRepository.save(todo);
+        Todo savedTodo = todoRepository.save(todo);
+        return ApiResponse.success("Todo created successfully",savedTodo);
     }
     
     @PutMapping("/{id}")
-    public Todo updateTodo(@PathVariable Long id, @RequestBody @Valid Todo newTodoData) {
+    public ApiResponse<Todo> updateTodo(@PathVariable Long id, @RequestBody @Valid Todo newTodoData) {
 
         Todo existingTodo = todoRepository.findById(id)
         .orElseThrow(() -> new RuntimeException("Todo not found"));
@@ -45,12 +48,14 @@ public class TodoController {
         existingTodo.setTitle(newTodoData.getTitle());
         existingTodo.setDescription(newTodoData.getDescription());
         existingTodo.setCompleted(newTodoData.isCompleted());
-        
-        return todoRepository.save(existingTodo);
+
+        Todo updatedTodo = todoRepository.save(existingTodo);
+        return ApiResponse.success("Todo updated successfully", updatedTodo);
     }
     
     @DeleteMapping("/{id}")
-    public void deleteTodo(@PathVariable Long id) {
+    public ApiResponse<Void> deleteTodo(@PathVariable Long id) {
         todoRepository.deleteById(id);
+        return ApiResponse.success("Todo deleted successfully", null);
     }
 }

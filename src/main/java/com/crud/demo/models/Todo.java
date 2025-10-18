@@ -1,5 +1,7 @@
 package com.crud.demo.models;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -16,12 +18,15 @@ public class Todo {
 
     @Size(max = 400, message = "Description cannot exceed 400 characters")
     private String description;
-    
+
     private boolean completed;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "todo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Pomodoro> pomodoros;
 
     public Todo() {
     }
@@ -37,39 +42,52 @@ public class Todo {
         return this.id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getTitle() {
         return this.title;
     }
 
-    public User getUser() {
-        return this.user;
-    }
-    public void setUser(final User user) {
-        this.user = user;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDescription() {
         return this.description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public boolean isCompleted() {
         return this.completed;
     }
 
-    public void setId(final Long id) {
-        this.id = id;
+    public boolean getCompleted() {
+        return this.completed;
     }
 
-    public void setTitle(final String title) {
-        this.title = title;
-    }
-
-    public void setDescription(final String description) {
-        this.description = description;
-    }
-
-    public void setCompleted(final boolean completed) {
+    public void setCompleted(boolean completed) {
         this.completed = completed;
+    }
+
+    public User getUser() {
+        return this.user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<Pomodoro> getPomodoros() {
+        return this.pomodoros;
+    }
+
+    public void setPomodoros(List<Pomodoro> pomodoros) {
+        this.pomodoros = pomodoros;
     }
 
 }
