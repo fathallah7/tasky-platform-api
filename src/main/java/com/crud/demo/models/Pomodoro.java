@@ -1,6 +1,6 @@
 package com.crud.demo.models;
 
-import org.springframework.scheduling.config.Task;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "pomodoro")
@@ -24,7 +25,10 @@ public class Pomodoro {
 
     @ManyToOne
     @JoinColumn(name = "todo_id")
+    @NotNull(message = "todo is required")
     private Todo todo;
+
+    private LocalDateTime startTime;
 
     public Pomodoro() {
     }
@@ -57,6 +61,14 @@ public class Pomodoro {
 
     public void setTodo(Todo todo) {
         this.todo = todo;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
 
 }
