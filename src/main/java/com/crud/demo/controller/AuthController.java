@@ -1,5 +1,6 @@
 package com.crud.demo.controller;
 
+import com.crud.demo.dto.ApiResponse;
 import com.crud.demo.models.User;
 import com.crud.demo.repository.UserRepository;
 import com.crud.demo.security.JwtUtil;
@@ -23,22 +24,26 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String register(@RequestBody User user) {
+    public ApiResponse<User> register(@RequestBody User user) {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            return "Username already exists!";
+            return ApiResponse.error("Email already exists!");
         }
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
-        return "User registered successfully!";
+        User savedUser = userRepository.save(user);
+
+        return ApiResponse.success("User registered successfully!", savedUser);
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody User loginRequest) {
+    public ApiResponse<String> login(@RequestBody User loginRequest) {
         Optional<User> userOpt = userRepository.findByEmail(loginRequest.getEmail());
+
         if (userOpt.isPresent() && passwordEncoder.matches(loginRequest.getPassword(), userOpt.get().getPassword())) {
-            return jwtUtil.generateToken(loginRequest.getEmail());
+            String token = jwtUtil.generateToken(loginRequest.getEmail());
+            return ApiResponse.success("Login successful", token);
         } else {
-            return "Invalid username or password!";
+            return ApiResponse.error("Invalid email or password!");
         }
     }
 }
