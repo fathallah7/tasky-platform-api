@@ -35,8 +35,8 @@ public class PomodoroController {
         pomodoro.setTodo(todo);
         pomodoro.setStartTime(LocalDateTime.now());
 
-        Pomodoro savedPomodoro = pomodoroRepository.save(pomodoro);
-        return ApiResponse.success("Pomodoro started successfully", savedPomodoro);
+        pomodoroRepository.save(pomodoro);
+        return ApiResponse.success("Pomodoro Saved successfully", null);
     }
 
 }
