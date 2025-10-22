@@ -2,6 +2,8 @@ package com.crud.demo.models;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,11 +23,13 @@ public class Pomodoro {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "todo_id")
     @NotNull(message = "todo is required")
+    @JsonIgnore
     private Todo todo;
 
     private LocalDateTime startTime;

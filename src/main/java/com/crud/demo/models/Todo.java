@@ -2,6 +2,8 @@ package com.crud.demo.models;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -23,9 +25,11 @@ public class Todo {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
     @OneToMany(mappedBy = "todo", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Pomodoro> pomodoros;
 
     public Todo() {
