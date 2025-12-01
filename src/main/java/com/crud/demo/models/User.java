@@ -3,8 +3,6 @@ package com.crud.demo.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
-import java.util.List;
-
 @Entity
 @Table(name="users")
 public class User {
@@ -22,12 +20,6 @@ public class User {
 
     @NotBlank(message = "Password is required")
     private String password;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Todo> todos;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Goal> goals;
 
     public User() {}
 
